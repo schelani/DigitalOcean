@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: digitalocean-demo
+  labels:
+    app: digitalocean-demo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: digitalocean-demo
+  template:
+    metadata:
+      labels:
+        app: digitalocean-demo
+    spec:
+      containers:
+        - name: digitalocean-demo
+          image: registry.digitalocean.com/sunil-container-registry/digitalocean-demo:v2
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
