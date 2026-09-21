@@ -4,12 +4,23 @@ A single-page Flask app styled with DigitalOcean's brand blue, deployed to Digit
 
 ## Repository layout
 
-This project is split across two folders:
-
-| Folder | Contents |
-| --- | --- |
-| `digitalocean-demo/` | Application code: `app.py`, `requirements.txt`, `Dockerfile`, `.dockerignore`, `templates/index.html` |
-| `digitalocean-demo-yaml/` | Kubernetes manifests: `deployment.yaml`, `service.yaml`, `hpa.yaml`, `load-generator.yaml` |
+```
+DigitalOcean/                       (repo root)
+├── README.md
+├── app.py
+├── requirements.txt
+├── Dockerfile
+├── .dockerignore
+├── templates/
+│   └── index.html
+├── digitalocean-demo-yaml/         (Kubernetes manifests)
+│   ├── deployment.yaml
+│   ├── service.yaml
+│   ├── hpa.yaml
+│   └── load-generator.yaml
+└── diagrams/
+    └── doks-autoscaling-architecture.drawio
+```
 
 ### Application files
 
@@ -44,10 +55,9 @@ External traffic → DigitalOcean Load Balancer → Kubernetes Service → Pods 
 
 ### 1. Build and push the image
 
-Build explicitly for `amd64` (DOKS worker nodes are amd64, regardless of the architecture of the machine you build on):
+Build explicitly for `amd64` (DOKS worker nodes are amd64, regardless of the architecture of the machine you build on). Run this from the repo root, where `app.py` and the `Dockerfile` live:
 
 ```bash
-cd digitalocean-demo
 docker build --platform linux/amd64 -t digitalocean-demo .
 ```
 
@@ -88,7 +98,7 @@ doctl kubernetes cluster registry add digitalocean-demo-cluster
 ### 3. Deploy the application
 
 ```bash
-cd ../digitalocean-demo-yaml
+cd digitalocean-demo-yaml
 kubectl apply -f deployment.yaml
 kubectl get pods
 ```
